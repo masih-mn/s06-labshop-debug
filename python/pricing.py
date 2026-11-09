@@ -46,7 +46,7 @@ COUPONS = {
 
 
 def find_coupon(code):
-    return COUPONS.get(code)
+    return COUPONS.get(code.strip().upper())
 
 
 def price_order(order):
@@ -72,6 +72,8 @@ def coupon_discount(order, amount):
     if order.coupon_code == "":
         return 0
     coupon = find_coupon(order.coupon_code)
+    if coupon is None:
+        return 0
     if coupon.kind == "fixed":
         return min(coupon.value, amount)
     return apply_percent(order.items, coupon.value)
