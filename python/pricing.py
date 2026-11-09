@@ -85,11 +85,11 @@ def coupon_discount(order, amount):
 
 
 def apply_percent(items, percent):
-    # lower each unit price so the invoice shows the discounted prices
+    # compute the discount without modifying the items: price_order may be
+    # called again for the same order (e.g. in grand_total)
     discount = 0
     for item in items:
         cut = item.unit_price * percent // 100
-        item.unit_price -= cut
         discount += cut * item.qty
     return discount
 
