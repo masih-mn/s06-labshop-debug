@@ -25,6 +25,18 @@ class PriceOrderTest(unittest.TestCase):
         self.assertEqual(bill.discount, 20_000)
         self.assertEqual(bill.total, 236_200)
 
+    def test_bulk_discount_counts_same_sku_across_lines(self):
+        # BUG-2: order 1047, 6 + 6 = 12 units of K07 on two lines
+        order = Order(1047, "parisa", "", [
+            Item("K07", 38_500, 6),
+            Item("M21", 12_990, 1),
+            Item("K07", 38_500, 6),
+        ])
+        bill = price_order(order)
+        self.assertEqual(bill.subtotal, 474_990)
+        self.assertEqual(bill.discount, 46_200)
+        self.assertEqual(bill.total, 507_381)
+
 
 class ShippingTest(unittest.TestCase):
     def test_free_shipping_from_one_million(self):
