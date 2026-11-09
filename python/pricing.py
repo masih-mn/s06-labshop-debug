@@ -95,8 +95,8 @@ def apply_percent(items, percent):
 
 
 def tax_for(amount):
-    # VAT, rounded to the nearest toman
-    return amount * TAX_PERCENT // 100
+    # VAT, rounded to the nearest toman (0.5 rounds up)
+    return (amount * TAX_PERCENT + 50) // 100
 
 
 def shipping_for(amount):
