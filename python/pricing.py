@@ -60,11 +60,16 @@ def price_order(order):
 
 
 def bulk_discount(items):
-    # 10% off every line that has BULK_MIN_QTY units or more
-    discount = 0
+    # 10% off every SKU whose total qty in the order is BULK_MIN_QTY or more
+    qty_by_sku = {}
+    amount_by_sku = {}
     for item in items:
-        if item.qty >= BULK_MIN_QTY:
-            discount += item.unit_price * item.qty * BULK_PERCENT // 100
+        qty_by_sku[item.sku] = qty_by_sku.get(item.sku, 0) + item.qty
+        amount_by_sku[item.sku] = amount_by_sku.get(item.sku, 0) + item.unit_price * item.qty
+    discount = 0
+    for sku, qty in qty_by_sku.items():
+        if qty >= BULK_MIN_QTY:
+            discount += amount_by_sku[sku] * BULK_PERCENT // 100
     return discount
 
 
